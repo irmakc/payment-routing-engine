@@ -1,3 +1,23 @@
 spring:
   application:
     name: payment-routing-engine
+  datasource:
+    url: jdbc:postgresql://localhost:5432/payment_routing
+    username: payment_user
+    password: payment_pass
+    jpa:
+      hibernate:
+        ddl-auto: validate
+      properties:
+        hibernate:
+          jdbc:
+            time_zone: UTC
+    flyway:
+      enabled: true
+      locations: classpath:db/migration
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info
