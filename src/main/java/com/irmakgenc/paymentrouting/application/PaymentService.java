@@ -1,5 +1,6 @@
 package com.irmakgenc.paymentrouting.application;
 
+import com.irmakgenc.paymentrouting.domain.exception.PaymentNotFoundException;
 import com.irmakgenc.paymentrouting.domain.model.Payment;
 import com.irmakgenc.paymentrouting.domain.model.PaymentAttempt;
 import com.irmakgenc.paymentrouting.infrastructure.persistence.PaymentAttemptRepository;
@@ -30,6 +31,6 @@ public class PaymentService {
 
     public Payment getPayment(UUID id) {
         return paymentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Payment not found: " + id));
+                .orElseThrow(() -> new PaymentNotFoundException(id.toString()));
     }
 }

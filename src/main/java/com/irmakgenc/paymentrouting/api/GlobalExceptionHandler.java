@@ -1,6 +1,7 @@
 package com.irmakgenc.paymentrouting.api;
 
 import com.irmakgenc.paymentrouting.api.dto.ApiErrorResponse;
+import com.irmakgenc.paymentrouting.domain.exception.PaymentNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error", request, null);
+    }
+
+    @ExceptionHandler(PaymentNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handlePaymentNotFound(
+            PaymentNotFoundException ex,
+            HttpServletRequest request
+    ) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), request, null);
     }
 
     private ResponseEntity<ApiErrorResponse> build(HttpStatus status, String message, HttpServletRequest request, Map<String, String> fieldErrors) {
