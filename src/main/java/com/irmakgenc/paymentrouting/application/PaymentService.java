@@ -7,6 +7,7 @@ import com.irmakgenc.paymentrouting.infrastructure.persistence.PaymentRepository
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Service
 public class PaymentService {
@@ -25,5 +26,10 @@ public class PaymentService {
         attemptRepository.save(new PaymentAttempt(saved.getId(), "UNASSIGNED"));
 
         return saved;
+    }
+
+    public Payment getPayment(UUID id) {
+        return paymentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Payment not found: " + id));
     }
 }
