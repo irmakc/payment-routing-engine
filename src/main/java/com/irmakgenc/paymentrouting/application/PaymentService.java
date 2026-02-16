@@ -8,6 +8,7 @@ import com.irmakgenc.paymentrouting.infrastructure.persistence.PaymentRepository
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,14 +20,19 @@ public class PaymentService {
         this.paymentRepository = paymentRepository;
         this.attemptRepository = attemptRepository;
     }
-    public Payment createPayment(BigDecimal amount, String currency, String customerId) {
+    public Payment createPayment(BigDecimal amount, String currency, String customerId, String idempotencyKey) {
+
+        if (idempotencyKey != null) {
+            Optional<Payment> existing = paymentRepository.findByIdempotencyKey(idempotencyKey);
+            if (existing.isPresent()) {
+                return existing.get();
+            }
+        }
+
         Payment payment = new Payment(amount, currency, customerId);
-        Payment saved = paymentRepository.save(payment);
+        payment.setIdempotencyKey(idempotencyKey);
 
-        // attempt history starts here; routing will set real provider later
-        attemptRepository.save(new PaymentAttempt(saved.getId(), "UNASSIGNED"));
-
-        return saved;
+        return paymentRepository.save(payment);
     }
 
     public Payment getPayment(UUID id) {

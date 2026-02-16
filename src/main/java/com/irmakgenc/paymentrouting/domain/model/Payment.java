@@ -35,6 +35,9 @@ public class Payment {
 
     private LocalDateTime createdAt;
 
+    @Column(unique = true)
+    private String idempotencyKey;
+
     public Payment(BigDecimal amount, String currency, String customerId) {
         this.amount = amount;
         this.currency = currency;

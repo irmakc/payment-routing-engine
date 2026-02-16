@@ -31,12 +31,15 @@ public class PaymentsController {
 
     @Operation(
             summary = "Create and process a payment",
-            description = "Creates a payment and runs routing + provider fallback simulation. Returns the final payment state."
+            description = "Creates a payment and runs routing + provider fallback simulation. Returns the final payment state. Supports Idempotency-Key header to prevent duplicate payments"
     )
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Payment create(@RequestBody @Valid CreatePaymentRequest request) {
-        Payment created = paymentService.createPayment(request.getAmount(), request.getCurrency(), request.getCustomerId());
+    public Payment create(
+            @RequestBody @Valid CreatePaymentRequest request, @RequestHeader(value = "Idempotency-Key", required = false) String idempotencyKey
+    ) {
+        Payment created = paymentService.createPayment(request.getAmount(), request.getCurrency(), request.getCustomerId(), idempotencyKey
+        );
+
         return processingService.process(created.getId());
     }
 
