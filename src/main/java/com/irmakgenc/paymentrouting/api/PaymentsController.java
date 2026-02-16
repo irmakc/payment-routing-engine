@@ -6,12 +6,14 @@ import com.irmakgenc.paymentrouting.application.PaymentAttemptService;
 import com.irmakgenc.paymentrouting.application.PaymentProcessingService;
 import com.irmakgenc.paymentrouting.application.PaymentService;
 import com.irmakgenc.paymentrouting.domain.model.Payment;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Tag(name = "Payments", description = "Payment routing and provider fallback simulation")
 @RestController
 @RequestMapping("/payments")
 public class PaymentsController {
@@ -29,11 +31,7 @@ public class PaymentsController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Payment create(@RequestBody @Valid CreatePaymentRequest request) {
-        Payment created = paymentService.createPayment(
-                request.getAmount(),
-                request.getCurrency(),
-                request.getCustomerId()
-        );
+        Payment created = paymentService.createPayment(request.getAmount(), request.getCurrency(), request.getCustomerId());
         return processingService.process(created.getId());
     }
 
