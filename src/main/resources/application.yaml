@@ -27,3 +27,11 @@ springdoc:
   api-docs:
     path: /v3/api-docs
 
+logging:
+  file:
+    name: logs/payment-routing.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - [corr=%X{correlationId}] %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - [corr=%X{correlationId}] %msg%n"
+
+

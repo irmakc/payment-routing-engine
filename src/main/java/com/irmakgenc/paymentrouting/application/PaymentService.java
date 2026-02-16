@@ -14,11 +14,9 @@ import java.util.UUID;
 @Service
 public class PaymentService {
     private final PaymentRepository paymentRepository;
-    private final PaymentAttemptRepository attemptRepository;
 
-    public PaymentService(PaymentRepository paymentRepository, PaymentAttemptRepository attemptRepository) {
+    public PaymentService(PaymentRepository paymentRepository) {
         this.paymentRepository = paymentRepository;
-        this.attemptRepository = attemptRepository;
     }
     public Payment createPayment(BigDecimal amount, String currency, String customerId, String idempotencyKey) {
 
